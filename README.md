@@ -1,79 +1,108 @@
-# Dev Portfolio — React + Vite
+# Portfolio Website
 
-Premium dark-themed developer portfolio built with React, Vite, Tailwind CSS, Framer Motion, and React Router.
+A modern and fully responsive developer portfolio built with React, Vite, Tailwind CSS, and modern UI animations.
 
-## Folder Structure
+## 🚀 Features
 
-```
-dev-portfolio/
-├── index.html
-├── package.json
-├── vite.config.js
-├── tailwind.config.js
-├── postcss.config.js
-├── public/
-│   └── favicon.svg
-└── src/
-    ├── main.jsx                # React entry
-    ├── App.jsx                 # Router + ThemeProvider
-    ├── assets/                 # (your local images go here)
-    ├── styles/
-    │   └── index.css           # Tailwind + global styles
-    ├── hooks/
-    │   └── useTheme.jsx        # Dark/Light theme context
-    ├── lib/
-    │   └── data.js             # All content data
-    ├── components/
-    │   ├── Navbar.jsx
-    │   ├── Footer.jsx
-    │   ├── ParticleBg.jsx
-    │   ├── ProjectCard.jsx
-    │   └── SectionHeading.jsx
-    ├── sections/
-    │   ├── Hero.jsx
-    │   ├── About.jsx
-    │   ├── Skills.jsx
-    │   ├── Projects.jsx
-    │   ├── Experience.jsx
-    │   ├── Services.jsx
-    │   ├── Testimonials.jsx
-    │   └── Contact.jsx
-    └── pages/
-        ├── Home.jsx
-        └── NotFound.jsx
+* Modern dark UI design
+* Fully responsive layout
+* Smooth animations
+* Fast performance with Vite
+* Tailwind CSS styling
+* Interactive sections
+* Projects showcase
+* Skills section
+* Contact form
+* Clean and reusable components
+
+---
+
+## 🛠 Tech Stack
+
+* React.js
+* Vite
+* Tailwind CSS
+* JavaScript / TypeScript
+* Framer Motion
+* React Icons
+
+---
+
+## 📂 Project Structure
+
+```bash
+src/
+ ├── components/
+ ├── pages/
+ ├── assets/
+ ├── styles/
+ ├── hooks/
+ ├── App.jsx
+ └── main.jsx
 ```
 
-## Installation
+---
+
+## ⚡ Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/YOUR_USERNAME/portfolio.git
+```
+
+Go to project directory:
+
+```bash
+cd portfolio
+```
+
+Install dependencies:
 
 ```bash
 npm install
+```
+
+Start development server:
+
+```bash
 npm run dev
 ```
 
-Open http://localhost:5173
+---
 
-## Build
+## 🌐 Live Preview
+
+Add your deployed website link here.
+
+Example:
 
 ```bash
-npm run build
-npm run preview
+https://your-portfolio.vercel.app
 ```
 
-## Dependencies
+---
 
-**Runtime:** react, react-dom, react-router-dom, framer-motion, lucide-react
-**Dev:** vite, @vitejs/plugin-react, tailwindcss, postcss, autoprefixer
+## 📸 Screenshots
 
-## Environment variables
+Add project screenshots here.
 
-None required. To replace placeholder images, drop files into `src/assets/` and import them in `src/lib/data.js`.
+---
 
-## Features
+## 📬 Contact
 
-- Fully responsive (mobile-first)
-- Dark / light theme toggle (persisted to localStorage)
-- Framer Motion animations + scroll-triggered reveals
-- Animated particle canvas background
-- Glassmorphism + gradient brand system
-- SEO meta tags in `index.html`
-- React Router with 404 page
+* GitHub: https://github.com/YOUR_USERNAME
+* Email: [your-email@gmail.com](mailto:your-email@gmail.com)
+* LinkedIn: https://linkedin.com/in/YOUR_USERNAME
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+---
+
+## ⭐ Support
+
+If you like this project, give it a star on GitHub ⭐
