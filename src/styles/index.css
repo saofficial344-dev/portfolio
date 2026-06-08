@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: dark; }
+html, body { background: #0B0F19; color: #E6EAF2; font-family: "Poppins", sans-serif; -webkit-font-smoothing: antialiased; }
+html.light, html.light body { background: #F7F8FB; color: #0B0F19; }
+
+@layer components {
+  .glass { @apply bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl; }
+  html.light .glass { @apply bg-white/70 border-black/10; }
+  .gradient-text { @apply bg-gradient-brand bg-clip-text text-transparent; }
+  .glow-text { text-shadow: 0 0 24px rgba(0,245,160,0.45); }
+  .glow-primary { box-shadow: 0 0 40px rgba(0,245,160,0.35); }
+  .grid-bg {
+    background-image:
+      linear-gradient(rgba(0,245,160,.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,245,160,.08) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: linear-gradient(#00F5A0,#00D9FF); border-radius: 8px; }
+::-webkit-scrollbar-track { background: #0B0F19; }
+html { scroll-behavior: smooth; }
