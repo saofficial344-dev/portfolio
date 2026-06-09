@@ -7,7 +7,7 @@ export default function SectionHeading({ eyebrow, title, description, center }) 
         <span className="h-px w-8 bg-primary" />{eyebrow}
       </div>
       <h2 className="font-display text-4xl md:text-5xl font-bold"><span className="gradient-text">{title}</span></h2>
-      {description && <p className="mt-4 text-muted">{description}</p>}
+      {description && <p className="mt-5 text-muted">{description}</p>}
     </motion.div>
   );
 }

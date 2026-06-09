@@ -11,8 +11,15 @@ const stats = [
 
 export default function About() {
   return (
-    <section id="about" className="py-24 px-6">
-      <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+    <motion.section
+      id="about"
+      className="py-24 px-6 md:px-9"
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.25 }}
+      transition={{ duration: 0.85, ease: "easeOut" }}
+    >
+      <div className="max-w-screen mx-auto grid lg:grid-cols-2 gap-16 items-center">
 
         {/* Left Content */}
         <motion.div
@@ -52,7 +59,7 @@ export default function About() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="glass p-6 hover:border-primary/40 hover:-translate-y-1 transition"
+              className="glass p-8 hover:border-primary/40 hover:-translate-y-1 transition"
             >
               <s.icon className="h-7 w-7 text-primary mb-3" />
               <div className="font-display text-3xl gradient-text">
@@ -65,6 +72,6 @@ export default function About() {
         </div>
 
       </div>
-    </section>
+    </motion.section>
   );
 }
