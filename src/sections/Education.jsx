@@ -13,7 +13,7 @@ const education = [
     period: "2022 - 2026",
     level: "University",
     institution: "SZABIST University Islamabad",
-    field: "BS Software Engineering",
+    field: "BS Computer Science",
     desc: "Focused on software engineering, data structures, algorithms, and full-stack development."
   }
 ];
