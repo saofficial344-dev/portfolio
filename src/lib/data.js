@@ -21,9 +21,9 @@ export const skills = [
 ];
 
 export const projects = [
-  { title: "Nebula Dashboard", desc: "Realtime analytics platform with AI insights.", tags: ["Next.js","tRPC","Postgres"], img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800" },
-  { title: "FlowMetrics", desc: "SaaS workflow automation suite.", tags: ["React","Node","Stripe"], img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800" },
-  { title: "Pulsewave", desc: "Audio-reactive music visualizer.", tags: ["WebGL","Three.js"], img: "https://images.unsplash.com/photo-1493676304819-0d7a8d026dcf?w=800" },
+  { title: "Nebula Dashboard", desc: "Realtime analytics platform with AI insights.", tags: ["Next.js","Vercel","Postgres"], img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800" },
+  { title: "FlowMetrics", desc: "SaaS workflow automation suite.", tags: ["React","Node","Tailwind CSS","Mongodb"], img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800" },
+  { title: "Pulsewave", desc: "Audio-reactive music visualizer.", tags: ["css","html","javascript","Node"], img: "https://images.unsplash.com/photo-1493676304819-0d7a8d026dcf?w=800" },
 ];
 
 export const experience = [

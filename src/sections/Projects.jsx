@@ -14,9 +14,17 @@ export default function Projects() {
       transition={{ duration: 0.85, ease: "easeOut" }}
     >
       <div className="max-w-screen mx-auto">
-        <SectionHeading eyebrow="Projects" title="Selected Work" description="A handful of products I've shipped recently." center />
+        <SectionHeading
+          eyebrow="Projects"
+          title="Selected Work"
+          description="A handful of products I've shipped recently."
+          center
+        />
+
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-16">
-          {projects.map((p, i) => <ProjectCard key={p.title} project={p} index={i} />)}
+          {projects.map((p, i) => (
+            <ProjectCard key={p.title} project={p} index={i} />
+          ))}
         </div>
       </div>
     </motion.section>
