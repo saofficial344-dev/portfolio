@@ -1,56 +1,58 @@
 import { motion } from "framer-motion";
+import SectionHeading from "../components/SectionHeading.jsx";
+import AnimatedProgressBar from "../components/AnimatedProgressBar.jsx";
+import { skills } from "../lib/data.js";
 
-export default function CircularSkill({ label, level }) {
-  const gradientId = `skill-gradient-${label.replace(/\s+/g, "-").toLowerCase()}`;
-  const radius = 32;
-  const circumference = 2 * Math.PI * radius;
-  const dashOffset = circumference * (1 - level / 100);
+export default function Skills() {
+  // 🔥 REMOVE DUPLICATES BY NAME (IMPORTANT FIX)
+  const uniqueSkills = Array.from(
+    new Map(skills.map((item) => [item.name, item])).values()
+  );
 
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.96 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true, amount: 0.6 }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
-      className="group relative flex flex-col items-center gap-3"
+    <motion.section
+      id="skills"
+      className="py-24 px-6 md:px-10"
+      initial={{ opacity: 0, y: 25 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.8 }}
     >
-      <div className="relative h-20 w-20">
-        <div className="absolute -inset-2 rounded-full blur-xl opacity-0 group-hover:opacity-70 transition bg-gradient-to-r from-primary/10 to-secondary/10 pointer-events-none" />
-        <svg className="h-full w-full rotate-[-90deg]" viewBox="0 0 84 84">
-          <circle
-            cx="42"
-            cy="42"
-            r={radius}
-            stroke="rgba(255,255,255,0.06)"
-            strokeWidth="8"
-            fill="none"
-          />
-          <motion.circle
-            cx="42"
-            cy="42"
-            r={radius}
-            stroke={`url(#${gradientId})`}
-            strokeWidth="8"
-            fill="none"
-            strokeLinecap="round"
-            strokeDasharray={circumference}
-            initial={{ strokeDashoffset: circumference }}
-            whileInView={{ strokeDashoffset: dashOffset }}
-            viewport={{ once: true, amount: 0.6 }}
-            transition={{ duration: 1.4, ease: "easeOut" }}
-          />
-          <defs>
-            <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#00F5A0" />
-              <stop offset="100%" stopColor="#00D9FF" />
-            </linearGradient>
-          </defs>
-        </svg>
-        <div className="absolute inset-0 flex items-center justify-center text-sm font-semibold text-bg">
-          {level}%
+      <div className="max-w-6xl mx-auto">
+        <SectionHeading
+          eyebrow="Skills"
+          title="Tools of the Trade"
+          center
+        />
+
+        {/* RECTANGLE GRID (NOW CLEAN - NO DUPLICATES) */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-12">
+          {uniqueSkills.map((skill, i) => (
+            <motion.div
+              key={skill.name}
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.04 }}
+              whileHover={{ scale: 1.03 }}
+              className="glass p-5 rounded-xl border border-white/10"
+            >
+              {/* SINGLE NAME + % ONLY */}
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-medium text-sm">{skill.name}</h3>
+                <span className="text-xs text-primary font-semibold">
+                  {skill.level}%
+                </span>
+              </div>
+
+              <AnimatedProgressBar
+                label={skill.name}
+                level={skill.level}
+              />
+            </motion.div>
+          ))}
         </div>
       </div>
-      <div className="text-center text-xs text-muted leading-tight">{label}</div>
-    </motion.div>
+    </motion.section>
   );
 }

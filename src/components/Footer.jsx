@@ -16,7 +16,7 @@ export default function Footer() {
         <div className="flex gap-3">
 
           <a
-            href="https://github.com/your-username"
+            href="https://github.com/saofficial344-dev"
             target="_blank"
             rel="noreferrer"
             aria-label="GitHub"

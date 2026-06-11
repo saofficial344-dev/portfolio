@@ -1,12 +1,23 @@
 export const titles = ["Full-Stack Developer","UI/UX Engineer","React Specialist","Cloud Native Builder"];
 
 export const skills = [
-  { name: "React / Next.js", level: 95 },
-  { name: "TypeScript", level: 90 },
-  { name: "Node.js", level: 88 },
-  { name: "Tailwind CSS", level: 95 },
-  { name: "PostgreSQL", level: 82 },
-  { name: "AWS / Cloud", level: 80 },
+  { name: "MongoDB", level: 88, iconSrc: "/src/assets/logos/mongodb.svg" },
+  { name: "Express.js", level: 86, iconSrc: "/src/assets/logos/express.svg" },
+  { name: "React.js", level: 95, iconSrc: "/src/assets/logos/react.svg" },
+  { name: "Node.js", level: 90, iconSrc: "/src/assets/logos/nodejs.svg" },
+  { name: "Postman", level: 82, iconSrc: "/src/assets/logos/postman.svg" },
+  { name: "Git & GitHub", level: 92, iconSrc: "/src/assets/logos/github.svg" },
+  { name: "VS Code", level: 90, iconSrc: "/src/assets/logos/vscode.svg" },
+  { name: "Firebase", level: 80, iconSrc: "/src/assets/logos/firebase.svg" },
+  { name: "REST APIs", level: 92, iconSrc: "/src/assets/logos/postman.svg" },
+  { name: "JWT Authentication", level: 84, iconSrc: "/src/assets/logos/javascript.svg" },
+  { name: "Tailwind CSS", level: 95, iconSrc: "/src/assets/logos/tailwind.svg" },
+  { name: "JavaScript (ES6+)", level: 96, iconSrc: "/src/assets/logos/javascript.svg" },
+  { name: "HTML5", level: 98, iconSrc: "/src/assets/logos/javascript.svg" },
+  { name: "CSS3", level: 94, iconSrc: "/src/assets/logos/tailwind.svg" },
+  { name: "Framer Motion", level: 90, iconSrc: "/src/assets/logos/framer-motion.svg" },
+  { name: "Figma", level: 82, iconSrc: "/src/assets/logos/postman.svg" },
+  { name: "Vercel / Netlify", level: 88, iconSrc: "/src/assets/logos/postman.svg" },
 ];
 
 export const projects = [
@@ -31,7 +42,7 @@ export const services = [
 ];
 
 export const testimonials = [
-  { name: "Sarah Mitchell", role: "CEO, Nebula Labs", text: "Alex transformed our entire platform. Blazingly fast.", rating: 5 },
+  { name: "Sarah Mitchell", role: "CEO, Nebula Labs", text: "Shoaib Akhter transformed our entire platform. Blazingly fast.", rating: 5 },
   { name: "Daniel Park", role: "CTO, FlowMetrics", text: "Sharp eye for detail, ships on time, every time.", rating: 5 },
   { name: "Lina Rodriguez", role: "Founder, Pulsewave", text: "From concept to launch in 6 weeks. Premium polish.", rating: 5 },
 ];
