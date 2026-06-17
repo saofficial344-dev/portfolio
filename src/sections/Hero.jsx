@@ -52,32 +52,27 @@ export default function Hero() {
           className="space-y-8"
         >
 
-          {/* Availability */}
           <div className="inline-flex items-center gap-2 glass px-4 py-1.5 text-xs">
             <span className="h-2 w-2 rounded-full bg-primary animate-pulse" />
             Available for freelance / internships
           </div>
 
-          {/* Name */}
           <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.05]">
             Hi, I'm{" "}
             <span className="gradient-text glow-text">Shoaib Akhter</span>
           </h1>
 
-          {/* Role typing */}
           <div className="text-xl md:text-2xl text-muted font-display h-9">
             <span className="text-primary">{">"}</span> {text}
             <span className="inline-block w-[2px] h-6 bg-primary ml-1 animate-pulse align-middle" />
           </div>
 
-          {/* Description */}
           <p className="text-muted max-w-lg leading-relaxed">
             I am a MERN Stack Developer passionate about building modern,
             responsive and scalable full-stack web applications using
             MongoDB, Express.js, React and Node.js.
           </p>
 
-          {/* Buttons */}
           <div className="flex flex-wrap gap-5 pt-3">
 
             <a
@@ -98,23 +93,41 @@ export default function Hero() {
 
           </div>
 
-          {/* Social */}
+          {/* ✅ FIXED SOCIAL SECTION (NO LOOP, NO DUPLICATE) */}
           <div className="flex items-center gap-4 pt-4">
-            {[Github, Linkedin, Twitter].map((I, i) => (
-              <a
-                key={i}
-                href="#"
-                aria-label="social"
-                className="h-11 w-11 rounded-full glass flex items-center justify-center hover:text-primary hover:-translate-y-0.5 transition"
-              >
-                <I className="h-5 w-5" />
-              </a>
-            ))}
+
+            <a
+              href="https://github.com/saofficial344-dev"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="h-11 w-11 rounded-full glass flex items-center justify-center hover:text-primary hover:-translate-y-1 transition-all duration-300"
+            >
+              <Github className="h-5 w-5" />
+            </a>
+
+            <a
+              href="https://linkedin.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="h-11 w-11 rounded-full glass flex items-center justify-center hover:text-[#0A66C2] hover:-translate-y-1 transition-all duration-300"
+            >
+              <Linkedin className="h-5 w-5" />
+            </a>
+
+            <a
+              href="https://x.com/akhter_shoaib07"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="h-11 w-11 rounded-full glass flex items-center justify-center hover:text-sky-400 hover:-translate-y-1 transition-all duration-300"
+            >
+              <Twitter className="h-5 w-5" />
+            </a>
+
           </div>
 
         </motion.div>
 
-        {/* Right Side (image section same) */}
+        {/* Right Side */}
         <motion.div
           initial={{ opacity: 0, scale: 0.85 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -128,31 +141,8 @@ export default function Hero() {
             <div className="absolute -inset-10 rounded-full border border-secondary/20 animate-[spin_30s_linear_infinite_reverse]" />
 
             <div className="relative h-72 w-72 md:h-96 md:w-96 rounded-full overflow-hidden ring-2 ring-primary/40 shadow-glow">
-              <img
-                src="self.jpeg"
-                alt="profile"
-                className="h-full w-full object-cover"
-              />
+              <img src="self.jpeg" alt="profile" className="h-full w-full object-cover" />
             </div>
-
-            {/* Stats (realistic version) */}
-            <motion.div
-              animate={{ y: [0, -10, 0] }}
-              transition={{ duration: 3, repeat: Infinity }}
-              className="absolute -top-4 -left-8 glass px-4 py-3 text-sm hidden md:block"
-            >
-              <div className="text-primary font-display text-xl">05+</div>
-              <div className="text-xs text-muted">Projects</div>
-            </motion.div>
-
-            <motion.div
-              animate={{ y: [0, 10, 0] }}
-              transition={{ duration: 4, repeat: Infinity }}
-              className="absolute -bottom-4 -right-8 glass px-4 py-3 text-sm hidden md:block"
-            >
-              <div className="text-secondary font-display text-xl">MERN</div>
-              <div className="text-xs text-muted">Stack Focus</div>
-            </motion.div>
 
           </div>
         </motion.div>
