@@ -34,7 +34,7 @@ export default function Navbar() {
           </span>
 
           <span className="font-display tracking-wider">
-            <span className="gradient-text">Shoaib </span>Akhterrrrr
+            <span className="gradient-text">Shoaib </span>Akhter
           </span>
         </a>
 
