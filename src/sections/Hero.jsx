@@ -106,7 +106,7 @@ export default function Hero() {
             </a>
 
             <a
-              href="https://linkedin.com"
+              href="https://www.linkedin.com/in/shoaib-akhter-dev?utm_source=share_via&utm_content=profile&utm_medium=member_android"
               target="_blank"
               rel="noopener noreferrer"
               className="h-11 w-11 rounded-full glass flex items-center justify-center hover:text-[#0A66C2] hover:-translate-y-1 transition-all duration-300"

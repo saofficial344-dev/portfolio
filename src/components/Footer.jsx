@@ -25,7 +25,7 @@ export default function Footer() {
           </a>
 
           <a
-            href="https://linkedin.com/in/your-profile"
+            href="https://www.linkedin.com/in/shoaib-akhter-dev?utm_source=share_via&utm_content=profile&utm_medium=member_android"
             target="_blank"
             rel="noreferrer"
             aria-label="LinkedIn"
