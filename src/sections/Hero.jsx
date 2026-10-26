@@ -1,153 +1,198 @@
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { Github, Linkedin, Twitter, ArrowDown, Download } from "lucide-react";
-import { titles } from "../lib/data.js";
+import { useRef, useState } from "react";
+import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
+import { Github, Linkedin, Twitter } from "lucide-react";
+import Scene3D from "../components/Scene3D.jsx";
+import { useTheme } from "../hooks/useTheme.jsx";
+
+const LABELS = [
+  { id: "board", title: "APIs", stack: "REST, JWT auth", side: "l" },
+  { id: "cooler", title: "Backend", stack: "Node.js, Express, NestJS", side: "r" },
+  { id: "ram", title: "Data", stack: "MongoDB, PostgreSQL, Neon", side: "r" },
+  { id: "gpu", title: "Frontend", stack: "React, Next.js, Tailwind", side: "r" },
+  { id: "psu", title: "Deploy", stack: "Docker, CI/CD, Vercel, DigitalOcean", side: "l" },
+];
+
+function Chapter({ progress, range, children, className = "" }) {
+  const [a, b, c, d] = range;
+  const opacity = useTransform(progress, [a, b, c, d], [0, 1, 1, 0]);
+  const y = useTransform(progress, [a, b, c, d], [28, 0, 0, -28]);
+  const pointerEvents = useTransform(opacity, (o) => (o > 0.4 ? "auto" : "none"));
+  return (
+    <motion.div
+      style={{ opacity, y, pointerEvents }}
+      className={`absolute inset-x-0 bottom-0 px-6 pb-10 pt-28 md:px-9 md:bottom-auto md:top-1/2 md:-translate-y-1/2 md:pb-0 md:pt-0 ${className}`}
+    >
+      <div className="mx-auto w-full max-w-screen">
+        <div className="max-w-[34rem]">{children}</div>
+      </div>
+    </motion.div>
+  );
+}
+
+const reveal = (i) => ({
+  initial: { opacity: 0, y: 22 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.7, delay: 0.15 + i * 0.12, ease: [0.2, 0.7, 0.2, 1] },
+});
 
 export default function Hero() {
-  const [text, setText] = useState("");
-  const [idx, setIdx] = useState(0);
-  const [del, setDel] = useState(false);
+  const ref = useRef(null);
+  const progressRef = useRef(0);
+  const labelEls = useRef({});
+  const { theme } = useTheme();
+  const [failed, setFailed] = useState(false);
 
-  useEffect(() => {
-    const current = titles[idx];
-    const t = setTimeout(() => {
-      if (!del) {
-        setText(current.slice(0, text.length + 1));
-        if (text === current) setTimeout(() => setDel(true), 1500);
-      } else {
-        setText(current.slice(0, text.length - 1));
-        if (text === "") {
-          setDel(false);
-          setIdx((idx + 1) % titles.length);
-        }
-      }
-    }, del ? 40 : 90);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
+  useMotionValueEvent(scrollYProgress, "change", (v) => { progressRef.current = v; });
 
-    return () => clearTimeout(t);
-  }, [text, del, idx]);
+  const labelOpacity = useTransform(scrollYProgress, [0.22, 0.34, 0.74, 0.84], [0, 1, 1, 0]);
+  const rail = useTransform(scrollYProgress, [0, 1], [0, 1]);
+  const hintOpacity = useTransform(scrollYProgress, [0, 0.06], [1, 0]);
 
   return (
-    <motion.section
+    <section
       id="home"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-32 pb-24 px-6 md:px-9"
-      initial={{ opacity: 0, y: 24 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.9, ease: "easeOut" }}
+      ref={ref}
+      className={`relative ${failed ? "h-[100svh]" : "h-[540vh]"}`}
     >
-      <div className="absolute inset-0 grid-bg opacity-40" />
-      <div className="absolute inset-0 bg-gradient-radial" />
-      <div className="absolute top-20 left-10 h-72 w-72 rounded-full bg-primary/20 blur-[120px] animate-pulse" />
-      <div
-        className="absolute bottom-20 right-10 h-96 w-96 rounded-full bg-secondary/20 blur-[120px] animate-pulse"
-        style={{ animationDelay: "1s" }}
-      />
+      <div className="sticky top-0 h-[100svh] overflow-hidden">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-radial" />
 
-      <div className="relative z-10 max-w-screen mx-auto grid lg:grid-cols-2 gap-12 items-center">
+        {!failed && (
+          <Scene3D
+            progressRef={progressRef}
+            labelEls={labelEls}
+            theme={theme}
+            onFail={() => setFailed(true)}
+          />
+        )}
 
-        {/* Left Side */}
-        <motion.div
-          initial={{ opacity: 0, x: -40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
-          className="space-y-8"
-        >
-
-          <div className="inline-flex items-center gap-2 glass px-4 py-1.5 text-xs">
-            <span className="h-2 w-2 rounded-full bg-primary animate-pulse" />
-            Available for freelance / internships
+        {/* labels pinned to the parts of the machine */}
+        {!failed && (
+          <div className="pointer-events-none absolute inset-0 hidden md:block">
+            {LABELS.map((l) => (
+              <div
+                key={l.id}
+                ref={(el) => { labelEls.current[l.id] = el; }}
+                className="absolute left-0 top-0 will-change-transform"
+              >
+                <motion.div style={{ opacity: labelOpacity }} className="relative">
+                  <span className="absolute -left-1.5 -top-1.5 h-3 w-3 rounded-full bg-primary ring-4 ring-primary/25" />
+                  <div
+                    className={`absolute top-0 flex items-center ${l.side === "l" ? "right-1 flex-row-reverse" : "left-1"}`}
+                    style={{ transform: "translateY(-50%)" }}
+                  >
+                    <span className="h-px w-8 bg-primary/70 lg:w-12" />
+                    <div className="glass whitespace-nowrap px-3 py-1.5">
+                      <div className="text-sm font-bold leading-tight">{l.title}</div>
+                      <div className="text-xs text-muted">{l.stack}</div>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+            ))}
           </div>
+        )}
 
-          <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.05]">
-            Hi, I'm{" "}
-            <span className="gradient-text glow-text">Shoaib Akhter</span>
-          </h1>
-
-          <div className="text-xl md:text-2xl text-muted font-display h-9">
-            <span className="text-primary">{">"}</span> {text}
-            <span className="inline-block w-[2px] h-6 bg-primary ml-1 animate-pulse align-middle" />
-          </div>
-
-          <p className="text-muted max-w-lg leading-relaxed">
-            I am a MERN Stack Developer passionate about building modern,
-            responsive and scalable full-stack web applications using
-            MongoDB, Express.js, React and Node.js.
-          </p>
-
-          <div className="flex flex-wrap gap-5 pt-3">
-
+        {/* 1. intro */}
+        <Chapter progress={scrollYProgress} range={[-0.2, 0, 0.17, 0.25]}>
+          <motion.p {...reveal(0)} className="mb-5 text-sm font-semibold text-primary">
+            Full-stack developer, Islamabad
+          </motion.p>
+          <motion.h1
+            {...reveal(1)}
+            className="font-display text-[clamp(2.6rem,6.5vw,5rem)] font-extrabold leading-[0.92] tracking-tight"
+          >
+            Shoaib
+            <br />
+            Akhter
+          </motion.h1>
+          <motion.p {...reveal(2)} className="mt-6 max-w-md text-lg leading-relaxed text-muted">
+            I build web apps and online stores, from the database to the
+            deploy. Right now I run Laptop Hub, Warsi Computers and the AMDHOUSE brand.
+          </motion.p>
+          <motion.div {...reveal(3)} className="mt-8 flex flex-wrap items-center gap-3">
             <a
               href="#projects"
-              className="group inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-bg font-medium hover:shadow-glow transition"
+              className="rounded-full bg-primary px-6 py-3 font-semibold text-bg transition hover:shadow-glow"
             >
-              View Projects{" "}
-              <ArrowDown className="h-4 w-4 group-hover:translate-y-0.5 transition" />
+              See my projects
             </a>
-
             <a
               href="#contact"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full glass hover:border-primary/40 transition"
+              className="rounded-full border border-fg/20 px-6 py-3 font-semibold transition hover:border-primary hover:text-primary"
             >
-              <Download className="h-4 w-4" />
-              Contact Me
+              Contact me
             </a>
+            <span className="ml-1 flex items-center gap-1">
+              {[
+                [Github, "https://github.com/saofficial344-dev", "GitHub"],
+                [Linkedin, "https://www.linkedin.com/in/shoaib-akhter-dev", "LinkedIn"],
+                [Twitter, "https://x.com/akhter_shoaib07", "X"],
+              ].map(([Icon, href, name]) => (
+                <a
+                  key={name}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={name}
+                  className="flex h-10 w-10 items-center justify-center rounded-full text-muted transition hover:text-primary"
+                >
+                  <Icon className="h-5 w-5" />
+                </a>
+              ))}
+            </span>
+          </motion.div>
+        </Chapter>
 
-          </div>
+        {/* 2. the stack */}
+        <Chapter progress={scrollYProgress} range={[0.24, 0.32, 0.5, 0.58]}>
+          <h2 className="font-display text-3xl font-extrabold leading-[1.05] tracking-tight md:text-5xl">
+            One developer,
+            <br />
+            every layer.
+          </h2>
+          <p className="mt-5 max-w-md text-lg leading-relaxed text-muted">
+            Each part of this machine is a layer I work on: the interface, the
+            API, the database and the place it all gets deployed.
+          </p>
+        </Chapter>
 
-          {/* ✅ FIXED SOCIAL SECTION (NO LOOP, NO DUPLICATE) */}
-          <div className="flex items-center gap-4 pt-4">
+        {/* 3. production */}
+        <Chapter progress={scrollYProgress} range={[0.6, 0.68, 0.84, 0.92]}>
+          <h2 className="font-display text-3xl font-extrabold leading-[1.05] tracking-tight md:text-5xl">
+            Running in production,
+            <br />
+            not only in a repo.
+          </h2>
+          <p className="mt-5 max-w-md text-lg leading-relaxed text-muted">
+            Laptop Hub is live on Vercel, DigitalOcean and Neon. Warsi Computers
+            is a working WooCommerce store. AMDHOUSE sells complete PC builds.
+          </p>
+          <a
+            href="#projects"
+            className="mt-8 inline-block rounded-full bg-primary px-6 py-3 font-semibold text-bg transition hover:shadow-glow"
+          >
+            Look at the work
+          </a>
+        </Chapter>
 
-            <a
-              href="https://github.com/saofficial344-dev"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="h-11 w-11 rounded-full glass flex items-center justify-center hover:text-primary hover:-translate-y-1 transition-all duration-300"
+        {/* scroll hint + progress rail */}
+        {!failed && (
+          <>
+            <motion.div
+              style={{ opacity: hintOpacity }}
+              className="pointer-events-none absolute bottom-6 left-[64%] hidden -translate-x-1/2 flex-col items-center gap-2 text-xs text-muted md:flex"
             >
-              <Github className="h-5 w-5" />
-            </a>
-
-            <a
-              href="https://www.linkedin.com/in/shoaib-akhter-dev?utm_source=share_via&utm_content=profile&utm_medium=member_android"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="h-11 w-11 rounded-full glass flex items-center justify-center hover:text-[#0A66C2] hover:-translate-y-1 transition-all duration-300"
-            >
-              <Linkedin className="h-5 w-5" />
-            </a>
-
-            <a
-              href="https://x.com/akhter_shoaib07"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="h-11 w-11 rounded-full glass flex items-center justify-center hover:text-sky-400 hover:-translate-y-1 transition-all duration-300"
-            >
-              <Twitter className="h-5 w-5" />
-            </a>
-
-          </div>
-
-        </motion.div>
-
-        {/* Right Side */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.85 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="relative flex justify-center"
-        >
-          <div className="relative">
-
-            <div className="absolute inset-0 rounded-full bg-gradient-brand blur-3xl opacity-40 animate-pulse" />
-            <div className="absolute -inset-4 rounded-full border border-primary/30 animate-[spin_20s_linear_infinite]" />
-            <div className="absolute -inset-10 rounded-full border border-secondary/20 animate-[spin_30s_linear_infinite_reverse]" />
-
-            <div className="relative h-72 w-72 md:h-96 md:w-96 rounded-full overflow-hidden ring-2 ring-primary/40 shadow-glow">
-              <img src="self.jpeg" alt="profile" className="h-full w-full object-cover" />
+              Scroll to open the case
+              <span className="h-10 w-px animate-scroll-hint bg-primary" />
+            </motion.div>
+            <div className="pointer-events-none absolute right-6 top-1/2 hidden h-40 w-px -translate-y-1/2 bg-fg/15 md:block">
+              <motion.div style={{ scaleY: rail }} className="h-full w-px origin-top bg-primary" />
             </div>
-
-          </div>
-        </motion.div>
-
+          </>
+        )}
       </div>
-    </motion.section>
+    </section>
   );
 }

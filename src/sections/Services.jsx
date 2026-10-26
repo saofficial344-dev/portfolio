@@ -1,42 +1,62 @@
-import { motion } from "framer-motion";
-import { Code, Palette, Layout, Server, Plug, Wrench } from "lucide-react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Code, Palette, Layout, Server, ShoppingCart, Rocket, Store, Plus } from "lucide-react";
 import SectionHeading from "../components/SectionHeading.jsx";
 import { services } from "../lib/data.js";
 
-const icons = { Code, Palette, Layout, Server, Plug, Wrench };
+const icons = { Code, Palette, Layout, Server, ShoppingCart, Rocket, Store };
 
 export default function Services() {
+  const [active, setActive] = useState(0);
   return (
-    <motion.section
-      id="services"
-      className="py-24 px-6 md:px-9"
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.25 }}
-      transition={{ duration: 0.85, ease: "easeOut" }}
-    >
-      <div className="max-w-screen mx-auto">
-        <SectionHeading eyebrow="Services" title="What I Offer" description="From idea to launch — every layer of the modern web stack." center />
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-16">
+    <section id="services" className="px-6 py-24 md:px-9">
+      <div className="mx-auto max-w-screen">
+        <SectionHeading eyebrow="Services" title="What I can build for you" center />
+        <ul className="mt-14 divide-y divide-fg/15 border-y border-fg/15">
           {services.map((s, i) => {
+            const open = active === i;
             const Icon = icons[s.icon];
             return (
-              <motion.div key={s.title} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                transition={{ delay: i * 0.08 }}
-                className="group relative glass p-8 hover:border-primary/50 hover:-translate-y-1 transition overflow-hidden">
-                <div className="absolute -top-12 -right-12 h-32 w-32 rounded-full bg-primary/10 blur-2xl group-hover:bg-primary/30 transition" />
-                <div className="relative">
-                  <div className="h-12 w-12 rounded-xl bg-primary/10 ring-1 ring-primary/30 flex items-center justify-center mb-5 group-hover:shadow-glow transition">
-                    <Icon className="h-6 w-6 text-primary" />
-                  </div>
-                  <h3 className="font-display text-lg mb-2">{s.title}</h3>
-                  <p className="text-sm text-muted leading-relaxed">{s.desc}</p>
-                </div>
-              </motion.div>
+              <li key={s.title}>
+                <button
+                  onClick={() => setActive(open ? -1 : i)}
+                  aria-expanded={open}
+                  className="flex w-full items-center justify-between gap-6 py-7 text-left"
+                >
+                  <span className={`font-display text-2xl font-extrabold tracking-tight transition-colors md:text-3xl ${open ? "text-primary" : ""}`}>
+                    {s.title}
+                  </span>
+                  <span
+                    className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full border transition duration-300 ${
+                      open ? "rotate-45 border-primary bg-primary text-bg" : "border-fg/25"
+                    }`}
+                  >
+                    <Plus className="h-5 w-5" />
+                  </span>
+                </button>
+                <AnimatePresence initial={false}>
+                  {open && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.35, ease: "easeOut" }}
+                      className="overflow-hidden"
+                    >
+                      <div className="flex items-start gap-5 pb-8">
+                        <span className="mt-1 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                          <Icon className="h-6 w-6" />
+                        </span>
+                        <p className="max-w-xl text-lg leading-relaxed text-muted">{s.desc}</p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </li>
             );
           })}
-        </div>
+        </ul>
       </div>
-    </motion.section>
+    </section>
   );
 }

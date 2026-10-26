@@ -1,57 +1,64 @@
-export const titles = ["Full-Stack Developer","UI/UX Engineer","React Specialist","Cloud Native Builder"];
-
-export const skills = [
-  { name: "MongoDB", level: 88, iconSrc: "/src/assets/logos/mongodb.svg" },
-  { name: "Express.js", level: 86, iconSrc: "/src/assets/logos/express.svg" },
-  { name: "React.js", level: 95, iconSrc: "/src/assets/logos/react.svg" },
-  { name: "Node.js", level: 90, iconSrc: "/src/assets/logos/nodejs.svg" },
-  { name: "Postman", level: 82, iconSrc: "/src/assets/logos/postman.svg" },
-  { name: "Git & GitHub", level: 92, iconSrc: "/src/assets/logos/github.svg" },
-  { name: "VS Code", level: 90, iconSrc: "/src/assets/logos/vscode.svg" },
-  { name: "Firebase", level: 80, iconSrc: "/src/assets/logos/firebase.svg" },
-  { name: "REST APIs", level: 92, iconSrc: "/src/assets/logos/postman.svg" },
-  { name: "JWT Authentication", level: 84, iconSrc: "/src/assets/logos/javascript.svg" },
-  { name: "Tailwind CSS", level: 95, iconSrc: "/src/assets/logos/tailwind.svg" },
-  { name: "JavaScript (ES6+)", level: 96, iconSrc: "/src/assets/logos/javascript.svg" },
-  { name: "HTML5", level: 98, iconSrc: "/src/assets/logos/javascript.svg" },
-  { name: "CSS3", level: 94, iconSrc: "/src/assets/logos/tailwind.svg" },
-  { name: "Framer Motion", level: 90, iconSrc: "/src/assets/logos/framer-motion.svg" },
-  { name: "Figma", level: 82, iconSrc: "/src/assets/logos/postman.svg" },
-  { name: "Vercel / Netlify", level: 88, iconSrc: "/src/assets/logos/postman.svg" },
-];
-
+/**
+ * REAL PROJECTS
+ * live : public URL (khali "" ho to button nahi dikhega)
+ * code : GitHub repo URL (khali "" ho to button nahi dikhega)
+ * img  : screenshot, e.g. "/projects/laptophub.png" (file public/projects/ mein rakho)
+ */
 export const projects = [
-  { title: "Nebula Dashboard", desc: "Realtime analytics platform with AI insights.", tags: [], img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800" },
-  { title: "FlowMetrics", desc: "SaaS workflow automation suite.", tags: [], img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800" },
-  { title: "Pulsewave", desc: "Audio-reactive music visualizer.", tags: [], img: "https://images.unsplash.com/photo-1493676304819-0d7a8d026dcf?w=800" },
-];
-
-export const experience = [
-  { role: "Senior Full-Stack Developer", company: "Nebula Labs", period: "2023 — Present", desc: "Leading frontend architecture and motion systems." },
-  { role: "Full-Stack Developer", company: "FlowMetrics", period: "2021 — 2023", desc: "Built SaaS platform from MVP to 50k users." },
-  { role: "Frontend Engineer", company: "Pixelwave", period: "2019 — 2021", desc: "Crafted award-winning marketing sites." },
+  {
+    title: "Laptop Hub",
+    kind: "Full-stack web app",
+    status: "Live",
+    year: "2026",
+    desc: "A laptop marketplace running in production. The React frontend is on Vercel, the API on DigitalOcean App Platform and the data in a serverless Neon PostgreSQL database.",
+    highlights: ["Deployed across 3 cloud services", "REST API with PostgreSQL (Neon)"],
+    tags: ["React", "Node.js", "PostgreSQL", "Neon", "DigitalOcean", "Vercel"],
+    live: "",
+    code: "",
+    img: "",
+    featured: true,
+  },
+  {
+    title: "Warsi Computers",
+    kind: "E-commerce store",
+    status: "Live",
+    year: "2025",
+    desc: "A live laptop store at warsicomputers.com. WooCommerce catalogue with a custom Elementor front end, product pages and cross-browser (Safari) fixes.",
+    highlights: ["Real customers, real orders", "Cross-browser debugging and performance"],
+    tags: ["WordPress", "WooCommerce", "Elementor", "CSS"],
+    live: "https://warsicomputers.com",
+    code: "",
+    img: "",
+  },
+  {
+    title: "AMDHOUSE",
+    kind: "Brand and store identity",
+    status: "Ongoing",
+    year: "2026",
+    desc: "A PC gaming brand that sells complete custom builds. I design its visual identity and a social post template (price post and specs post) for every build.",
+    highlights: ["Dark studio look with a neon accent", "Repeatable post system for each PC build"],
+    tags: ["Branding", "Social design", "PC Gaming"],
+    live: "",
+    code: "",
+    img: "",
+  },
 ];
 
 export const services = [
-  { icon: "Code", title: "Web Development", desc: "End-to-end web apps built with modern frameworks." },
-  { icon: "Palette", title: "UI / UX Design", desc: "Beautiful, accessible interfaces that delight." },
-  { icon: "Layout", title: "Frontend Engineering", desc: "Lightning-fast React apps with motion." },
-  { icon: "Server", title: "Backend Engineering", desc: "Scalable APIs and cloud-native architectures." },
-  { icon: "Plug", title: "API Integration", desc: "Stripe, OpenAI, Supabase and more." },
-  { icon: "Wrench", title: "Custom Solutions", desc: "Tailored products that match your vision." },
-];
-
-export const testimonials = [
-  { name: "Sarah Mitchell", role: "CEO, Nebula Labs", text: "Shoaib Akhter transformed our entire platform. Blazingly fast.", rating: 5 },
-  { name: "Daniel Park", role: "CTO, FlowMetrics", text: "Sharp eye for detail, ships on time, every time.", rating: 5 },
-  { name: "Lina Rodriguez", role: "Founder, Pulsewave", text: "From concept to launch in 6 weeks. Premium polish.", rating: 5 },
+  { icon: "Store", title: "Business software", desc: "Custom point of sale and management systems for shops, gyms, schools and restaurants." },
+  { icon: "Code", title: "Web development", desc: "Full-stack web apps with React, Node.js, Express and MongoDB or PostgreSQL." },
+  { icon: "ShoppingCart", title: "E-commerce stores", desc: "WooCommerce and custom stores that are fast, mobile-first and easy to manage." },
+  { icon: "Layout", title: "Frontend engineering", desc: "Responsive, accessible React and Tailwind interfaces with tasteful motion." },
+  { icon: "Server", title: "Backend and APIs", desc: "REST APIs, authentication and database design that grow with your product." },
+  { icon: "Palette", title: "UI and brand design", desc: "Clean layouts, social templates and brand looks for shops and startups." },
+  { icon: "Rocket", title: "Deploy and maintain", desc: "Docker, CI/CD pipelines, Vercel, DigitalOcean and Neon setups, plus bug fixing on live sites." },
 ];
 
 export const navLinks = [
   { href: "#home", label: "Home" },
   { href: "#about", label: "About" },
-  { href: "#skills", label: "Skills" },
   { href: "#projects", label: "Projects" },
+  { href: "#skills", label: "Skills" },
   { href: "#experience", label: "Experience" },
   { href: "#services", label: "Services" },
   { href: "#contact", label: "Contact" },

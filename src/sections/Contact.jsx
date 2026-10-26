@@ -1,439 +1,146 @@
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { useState } from "react";
 import emailjs from "@emailjs/browser";
-import {
-  Mail,
-  MapPin,
-  Phone,
-  Send,
-  Wallet,
-  MessageSquare,
-  BriefcaseBusiness,
-  Sparkles,
-  Clock,
-} from "lucide-react";
+import { Mail, MapPin, Phone, Send } from "lucide-react";
 import SectionHeading from "../components/SectionHeading.jsx";
 
+const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID?.trim();
+const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID?.trim();
+const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY?.trim();
+
+const contactInfo = [
+  { icon: Mail, label: "Email", value: "saofficial344@gmail.com", href: "mailto:saofficial344@gmail.com" },
+  { icon: Phone, label: "Phone", value: "+92 3435747254", href: "tel:+923435747254" },
+  { icon: MapPin, label: "Location", value: "Islamabad, Pakistan", href: null },
+];
+
+const projectTypes = [
+  "Portfolio website", "Business website", "Landing page", "MERN web app",
+  "E-commerce website", "Frontend development", "Backend API development",
+  "Bug fixing or improvements", "Other",
+];
+const budgetOptions = ["Less than $100", "$100 - $300", "$300 - $500", "$500 - $1000", "$1000+"];
+
+const field =
+  "w-full rounded-xl border border-fg/15 bg-surface/80 px-4 py-3 text-sm outline-none transition placeholder:text-muted/70 focus:border-primary focus:ring-4 focus:ring-primary/15";
+const labelCls = "mb-1.5 block text-sm font-semibold";
+
+const empty = { name: "", email: "", projectType: "", budget: "", message: "" };
+
 export default function Contact() {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    projectType: "",
-    budget: "",
-    message: "",
-  });
+  const [form, setForm] = useState(empty);
+  const [status, setStatus] = useState({ type: "idle", text: "" });
 
-  const [loading, setLoading] = useState(false);
-  const [sent, setSent] = useState(false);
-
-  const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID?.trim();
-  const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID?.trim();
-  const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY?.trim();
-
-  useEffect(() => {
-    console.log("EmailJS env values:", {
-      SERVICE_ID: SERVICE_ID ? "[set]" : "[missing]",
-      TEMPLATE_ID: TEMPLATE_ID ? "[set]" : "[missing]",
-      PUBLIC_KEY: PUBLIC_KEY ? "[set]" : "[missing]",
-    });
-
-    if (PUBLIC_KEY) {
-      try {
-        emailjs.init(PUBLIC_KEY);
-        console.log("EmailJS initialized with PUBLIC_KEY");
-      } catch (e) {
-        console.error("EmailJS init error:", e);
-      }
-    } else {
-      console.warn(
-        "VITE_EMAILJS_PUBLIC_KEY is not set. EmailJS may still work if the public key is passed on send()."
-      );
-    }
-  }, []);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  const onChange = (e) => setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
 
   const submit = async (e) => {
     e.preventDefault();
-
-    if (loading) return;
-
-    if (
-      !form.name.trim() ||
-      !form.email.trim() ||
-      !form.projectType.trim() ||
-      !form.budget.trim() ||
-      !form.message.trim()
-    ) {
-      alert("Please fill in all fields before sending.");
+    if (status.type === "sending") return;
+    if (Object.values(form).some((v) => !v.trim())) {
+      setStatus({ type: "error", text: "Please fill in every field before sending." });
       return;
     }
-
-    setLoading(true);
-
-    if (!SERVICE_ID || !TEMPLATE_ID) {
-      console.error("Missing EmailJS configuration:", {
-        SERVICE_ID,
-        TEMPLATE_ID,
-        PUBLIC_KEY,
-      });
-
-      alert(
-        "Email service not configured. Please set VITE_EMAILJS_SERVICE_ID and VITE_EMAILJS_TEMPLATE_ID."
-      );
-
-      setLoading(false);
+    if (!SERVICE_ID || !TEMPLATE_ID || !PUBLIC_KEY) {
+      setStatus({ type: "error", text: "The form is not connected yet. Please email me directly instead." });
       return;
     }
-
-    const templateParams = {
-      from_name: form.name,
-      from_email: form.email,
-      project_type: form.projectType,
-      budget: form.budget,
-      message: form.message,
-    };
-
+    setStatus({ type: "sending", text: "" });
     try {
-      console.log("Sending email with EmailJS", {
+      await emailjs.send(
         SERVICE_ID,
         TEMPLATE_ID,
-        PUBLIC_KEY: PUBLIC_KEY ? "[set]" : "[missing]",
-        templateParams,
-      });
-
-      const result = await emailjs.send(
-        SERVICE_ID,
-        TEMPLATE_ID,
-        templateParams,
+        {
+          from_name: form.name,
+          from_email: form.email,
+          project_type: form.projectType,
+          budget: form.budget,
+          message: form.message,
+        },
         PUBLIC_KEY
       );
-
-      console.log("EmailJS send success", result);
-
-      setSent(true);
-
-      setForm({
-        name: "",
-        email: "",
-        projectType: "",
-        budget: "",
-        message: "",
-      });
-
-      setTimeout(() => setSent(false), 2500);
+      setForm(empty);
+      setStatus({ type: "ok", text: "Message sent. I will reply to your email soon." });
     } catch (err) {
       console.error("EmailJS send failed:", err);
-      alert("Email failed to send. Check console for details.");
-    } finally {
-      setLoading(false);
+      setStatus({ type: "error", text: "The message could not be sent. Please try again or email me directly." });
     }
   };
 
-  const contactInfo = [
-    {
-      icon: Mail,
-      label: "Email",
-      value: "saofficial344@gmail.com",
-      href: "mailto:saofficial344@gmail.com",
-    },
-    {
-      icon: Phone,
-      label: "Phone",
-      value: "+92 3435747254",
-      href: "tel:+923435747254",
-    },
-    {
-      icon: MapPin,
-      label: "Location",
-      value: "Islamabad, Pakistan",
-      href: null,
-    },
-  ];
-
-  const projectTypes = [
-    "Portfolio Website",
-    "Business Website",
-    "Landing Page",
-    "MERN Web App",
-    "E-commerce Website",
-    "Frontend Development",
-    "Backend API Development",
-    "Bug Fixing / Improvements",
-    "Other",
-  ];
-
-  const budgetOptions = [
-    "Less than $100",
-    "$100 - $300",
-    "$300 - $500",
-    "$500 - $1000",
-    "$1000+",
-  ];
-
-  const inputClass =
-    "w-full rounded-2xl border border-slate-200/80 bg-white/80 px-4 py-3 text-sm text-slate-900 outline-none transition-all duration-300 placeholder:text-slate-400 focus:border-primary/45 focus:bg-white focus:ring-4 focus:ring-primary/10 dark:border-white/10 dark:bg-white/[0.04] dark:text-white dark:placeholder:text-white/30 dark:focus:bg-white/[0.07]";
-
-  const selectClass =
-    "w-full rounded-2xl border border-slate-200/80 bg-white/80 px-4 py-3 text-sm text-slate-900 outline-none transition-all duration-300 focus:border-primary/45 focus:bg-white focus:ring-4 focus:ring-primary/10 dark:border-white/10 dark:bg-white/[0.04] dark:text-white dark:focus:bg-white/[0.07]";
-
   return (
-    <motion.section
-      id="contact"
-      className="relative overflow-hidden px-6 py-24 md:px-10"
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.25 }}
-      transition={{ duration: 0.85, ease: "easeOut" }}
-    >
-      <div className="pointer-events-none absolute left-1/2 top-20 -z-10 h-72 w-72 -translate-x-1/2 rounded-full bg-primary/10 blur-3xl" />
-      <div className="pointer-events-none absolute bottom-10 right-10 -z-10 h-52 w-52 rounded-full bg-primary/10 blur-3xl" />
-
-      <div className="mx-auto max-w-6xl">
+    <section id="contact" className="px-6 py-24 md:px-9">
+      <div className="mx-auto max-w-screen">
         <SectionHeading
           eyebrow="Contact"
-          title="Let’s Work Together"
-          description="I'm open to freelance projects, collaborations, and full-time opportunities."
+          title="Tell me about your project"
+          description="I am open to freelance work, collaborations and full-time roles."
           center
         />
 
-        <div className="mt-16 grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-          {/* CONTACT INFO */}
-          <motion.div
-            className="space-y-5"
-            initial={{ opacity: 0, x: -24 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.65, ease: "easeOut" }}
-          >
-            <div className="relative overflow-hidden rounded-3xl border border-slate-200/80 bg-white/75 p-6 shadow-xl shadow-black/5 backdrop-blur-xl md:p-7 dark:border-white/10 dark:bg-white/[0.04] dark:shadow-black/10">
-              <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-primary/15 blur-2xl" />
-
-              <div className="relative mb-8">
-                <span className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl border border-primary/25 bg-primary/10 text-primary shadow-sm shadow-primary/10">
-                  <MessageSquare className="h-5 w-5" />
-                </span>
-
-                <h3 className="text-2xl font-semibold text-slate-950 dark:text-white">
-                  Have a project in mind?
-                </h3>
-
-                <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-white/55">
-                  Tell me about your idea, project type, budget, and timeline.
-                  I’ll get back to you with a clear response.
-                </p>
-              </div>
-
-              <div className="relative space-y-4">
-                {contactInfo.map((item) => {
-                  const Icon = item.icon;
-
-                  const content = (
-                    <div className="group flex items-center gap-4 rounded-2xl border border-slate-200/80 bg-white/70 p-4 shadow-sm shadow-black/5 transition-all duration-300 hover:border-primary/35 hover:bg-white dark:border-white/10 dark:bg-white/[0.03] dark:hover:bg-white/[0.06]">
-                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 text-primary transition-all duration-300 group-hover:scale-105 group-hover:bg-primary/20">
-                        <Icon className="h-5 w-5" />
-                      </span>
-
-                      <div className="min-w-0">
-                        <div className="text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-white/40">
-                          {item.label}
-                        </div>
-
-                        <div className="mt-1 break-words text-sm font-semibold text-slate-800 dark:text-white/85">
-                          {item.value}
-                        </div>
-                      </div>
-                    </div>
-                  );
-
-                  return item.href ? (
-                    <a key={item.label} href={item.href} className="block">
-                      {content}
-                    </a>
-                  ) : (
-                    <div key={item.label}>{content}</div>
-                  );
-                })}
-              </div>
-
-              <div className="relative mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-                <div className="rounded-2xl border border-slate-200/80 bg-white/70 p-4 shadow-sm shadow-black/5 dark:border-white/10 dark:bg-white/[0.03]">
-                  <Sparkles className="mb-3 h-5 w-5 text-primary" />
-                  <p className="text-sm font-semibold text-slate-900 dark:text-white/90">
-                    Clean UI
-                  </p>
-                  <p className="mt-1 text-xs leading-5 text-slate-500 dark:text-white/45">
-                    Modern, responsive and user-friendly interface.
-                  </p>
+        <div className="mt-14 grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
+          <div className="space-y-4">
+            {contactInfo.map(({ icon: Icon, label, value, href }) => {
+              const body = (
+                <div className="glass flex items-center gap-4 p-5 transition hover:border-primary/40">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                    <Icon className="h-5 w-5" />
+                  </span>
+                  <div className="min-w-0">
+                    <div className="text-sm text-muted">{label}</div>
+                    <div className="break-words font-semibold">{value}</div>
+                  </div>
                 </div>
+              );
+              return href ? <a key={label} href={href} className="block">{body}</a> : <div key={label}>{body}</div>;
+            })}
+          </div>
 
-                <div className="rounded-2xl border border-slate-200/80 bg-white/70 p-4 shadow-sm shadow-black/5 dark:border-white/10 dark:bg-white/[0.03]">
-                  <Clock className="mb-3 h-5 w-5 text-primary" />
-                  <p className="text-sm font-semibold text-slate-900 dark:text-white/90">
-                    Quick Reply
-                  </p>
-                  <p className="mt-1 text-xs leading-5 text-slate-500 dark:text-white/45">
-                    I usually respond with clear project direction.
-                  </p>
-                </div>
+          <form onSubmit={submit} className="glass space-y-5 p-6 md:p-8" noValidate>
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label htmlFor="name" className={labelCls}>Your name</label>
+                <input id="name" name="name" value={form.name} onChange={onChange} className={field} placeholder="Your name" autoComplete="name" />
               </div>
-            </div>
-          </motion.div>
-
-          {/* CONTACT FORM */}
-          <motion.form
-            onSubmit={submit}
-            className="relative overflow-hidden rounded-3xl border border-slate-200/80 bg-white/75 p-6 shadow-xl shadow-black/5 backdrop-blur-xl md:p-8 dark:border-white/10 dark:bg-white/[0.04] dark:shadow-black/10"
-            initial={{ opacity: 0, x: 24 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.65, ease: "easeOut" }}
-          >
-            <div className="pointer-events-none absolute -left-12 -top-12 h-36 w-36 rounded-full bg-primary/15 blur-2xl" />
-
-            <div className="relative mb-7">
-              <span className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl border border-primary/25 bg-primary/10 text-primary shadow-sm shadow-primary/10">
-                <Send className="h-5 w-5" />
-              </span>
-
-              <h3 className="text-2xl font-semibold text-slate-950 dark:text-white">
-                Send a Message
-              </h3>
-
-              <p className="mt-2 text-sm text-slate-500 dark:text-white/50">
-                Share your requirements and I’ll help you plan the next step.
-              </p>
-            </div>
-
-            <div className="relative grid gap-5 sm:grid-cols-2">
-              <div className="space-y-2">
-                <label className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-white/45">
-                  Your Name
-                </label>
-
-                <input
-                  name="name"
-                  value={form.name}
-                  onChange={handleChange}
-                  placeholder="Enter your name"
-                  className={inputClass}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-white/45">
-                  Your Email
-                </label>
-
-                <input
-                  name="email"
-                  type="email"
-                  value={form.email}
-                  onChange={handleChange}
-                  placeholder="Enter your email"
-                  className={inputClass}
-                />
+              <div>
+                <label htmlFor="email" className={labelCls}>Your email</label>
+                <input id="email" name="email" type="email" value={form.email} onChange={onChange} className={field} placeholder="you@example.com" autoComplete="email" />
               </div>
             </div>
 
-            <div className="relative mt-5 grid gap-5 sm:grid-cols-2">
-              <div className="space-y-2">
-                <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-white/45">
-                  <BriefcaseBusiness className="h-3.5 w-3.5" />
-                  Project Type
-                </label>
-
-                <select
-                  name="projectType"
-                  value={form.projectType}
-                  onChange={handleChange}
-                  className={selectClass}
-                >
-                  <option value="" className="bg-white text-slate-900 dark:bg-[#0b0b0f] dark:text-white">
-                    Select project type
-                  </option>
-
-                  {projectTypes.map((type) => (
-                    <option
-                      key={type}
-                      value={type}
-                      className="bg-white text-slate-900 dark:bg-[#0b0b0f] dark:text-white"
-                    >
-                      {type}
-                    </option>
-                  ))}
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label htmlFor="projectType" className={labelCls}>Project type</label>
+                <select id="projectType" name="projectType" value={form.projectType} onChange={onChange} className={field}>
+                  <option value="">Select a type</option>
+                  {projectTypes.map((t) => <option key={t} value={t}>{t}</option>)}
                 </select>
               </div>
-
-              <div className="space-y-2">
-                <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-white/45">
-                  <Wallet className="h-3.5 w-3.5" />
-                  Project Budget
-                </label>
-
-                <select
-                  name="budget"
-                  value={form.budget}
-                  onChange={handleChange}
-                  className={selectClass}
-                >
-                  <option value="" className="bg-white text-slate-900 dark:bg-[#0b0b0f] dark:text-white">
-                    Select your budget
-                  </option>
-
-                  {budgetOptions.map((budget) => (
-                    <option
-                      key={budget}
-                      value={budget}
-                      className="bg-white text-slate-900 dark:bg-[#0b0b0f] dark:text-white"
-                    >
-                      {budget}
-                    </option>
-                  ))}
+              <div>
+                <label htmlFor="budget" className={labelCls}>Budget</label>
+                <select id="budget" name="budget" value={form.budget} onChange={onChange} className={field}>
+                  <option value="">Select a range</option>
+                  {budgetOptions.map((b) => <option key={b} value={b}>{b}</option>)}
                 </select>
               </div>
             </div>
 
-            <div className="relative mt-5 space-y-2">
-              <label className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-white/45">
-                Project Details
-              </label>
-
-              <textarea
-                name="message"
-                rows={6}
-                value={form.message}
-                onChange={handleChange}
-                placeholder="Tell me about your project, goals, features, and timeline..."
-                className={`${inputClass} resize-none`}
-              />
+            <div>
+              <label htmlFor="message" className={labelCls}>Project details</label>
+              <textarea id="message" name="message" rows={6} value={form.message} onChange={onChange} className={`${field} resize-none`} placeholder="What do you want to build, and by when?" />
             </div>
 
             <button
               type="submit"
-              disabled={loading}
-              className="relative mt-6 flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-6 py-4 text-sm font-semibold text-bg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/20 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
+              disabled={status.type === "sending"}
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3.5 font-semibold text-bg transition hover:shadow-glow disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {loading ? (
-                "Sending..."
-              ) : sent ? (
-                "Message Sent ✓"
-              ) : (
-                <>
-                  Send Message <Send className="h-4 w-4" />
-                </>
-              )}
+              {status.type === "sending" ? "Sending..." : <>Send message <Send className="h-4 w-4" /></>}
             </button>
-          </motion.form>
+
+            <p role="status" aria-live="polite" className={`min-h-[1.25rem] text-sm ${status.type === "ok" ? "text-accent" : "text-secondary"}`}>
+              {status.text}
+            </p>
+          </form>
         </div>
       </div>
-    </motion.section>
+    </section>
   );
 }

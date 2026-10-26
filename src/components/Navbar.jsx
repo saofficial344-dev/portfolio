@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Code2, Menu, X, Sun, Moon } from "lucide-react";
+import { Menu, X, Sun, Moon } from "lucide-react";
 import { navLinks } from "../lib/data.js";
 import { useTheme } from "../hooks/useTheme.jsx";
 
@@ -12,106 +11,61 @@ export default function Navbar() {
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
     onScroll();
-    window.addEventListener("scroll", onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
-    <motion.header
-      initial={{ y: -80, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6 }}
-      className={`fixed top-0 inset-x-0 z-50 transition-all ${
-        scrolled ? "glass py-3" : "py-5 bg-transparent"
-      }`}
-    >
-      <nav className="max-w-screen mx-auto px-9 flex items-center justify-between">
-
-        {/* Logo / Brand */}
-        <a href="#home" className="flex items-center gap-2 group">
-          <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 ring-1 ring-primary/30 group-hover:shadow-glow transition">
-            <Code2 className="h-5 w-5 text-primary" />
-          </span>
-
-          <span className="font-display tracking-wider">
-            <span className="gradient-text">Shoaib </span>Akhter
-          </span>
+    <header className={`fixed inset-x-0 top-0 z-50 transition-all ${scrolled ? "glass !rounded-none py-3" : "py-5"}`}>
+      <nav className="mx-auto flex max-w-screen items-center justify-between px-6 md:px-9">
+        <a href="#home" className="font-display text-lg font-extrabold tracking-tight">
+          Shoaib <span className="text-primary">Akhter</span>
         </a>
 
-        {/* Desktop Nav */}
-        <ul className="hidden lg:flex items-center gap-8">
+        <ul className="hidden items-center gap-8 lg:flex">
           {navLinks.map((l) => (
             <li key={l.href}>
-              <a
-                href={l.href}
-                className="text-sm text-muted hover:text-primary transition relative after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full"
-              >
-                {l.label}
-              </a>
+              <a href={l.href} className="text-sm font-medium text-muted transition hover:text-primary">{l.label}</a>
             </li>
           ))}
         </ul>
 
-        {/* Actions */}
         <div className="flex items-center gap-3">
-
-          {/* Theme Toggle */}
           <button
             onClick={toggle}
-            aria-label="Toggle theme"
-            className="h-10 w-10 rounded-full glass flex items-center justify-center hover:text-primary transition"
+            aria-label="Switch theme"
+            className="flex h-10 w-10 items-center justify-center rounded-full glass transition hover:text-primary"
           >
-            {theme === "dark" ? (
-              <Sun className="h-4 w-4" />
-            ) : (
-              <Moon className="h-4 w-4" />
-            )}
+            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
-
-          {/* CTA Button */}
           <a
             href="#contact"
-            className="hidden lg:inline-flex px-5 py-2 rounded-full bg-primary text-bg text-sm font-medium hover:shadow-glow transition"
+            className="hidden rounded-full bg-primary px-5 py-2 text-sm font-semibold text-bg transition hover:shadow-glow lg:inline-flex"
           >
-            Let’s Work Together
+            Hire me
           </a>
-
-          {/* Mobile Menu Button */}
           <button
             aria-label="Menu"
+            aria-expanded={open}
             onClick={() => setOpen(!open)}
-            className="lg:hidden h-10 w-10 rounded-lg glass flex items-center justify-center"
+            className="flex h-10 w-10 items-center justify-center rounded-full glass lg:hidden"
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
       </nav>
 
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="lg:hidden glass mt-3 mx-6 p-6"
-          >
-            <ul className="flex flex-col gap-4">
-              {navLinks.map((l) => (
-                <li key={l.href}>
-                  <a
-                    href={l.href}
-                    onClick={() => setOpen(false)}
-                    className="hover:text-primary transition"
-                  >
-                    {l.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.header>
+      {open && (
+        <div className="glass mx-6 mt-3 p-6 lg:hidden">
+          <ul className="flex flex-col gap-4">
+            {navLinks.map((l) => (
+              <li key={l.href}>
+                <a href={l.href} onClick={() => setOpen(false)} className="transition hover:text-primary">{l.label}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </header>
   );
 }

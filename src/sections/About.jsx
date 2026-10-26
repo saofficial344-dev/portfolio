@@ -1,77 +1,50 @@
-import { motion } from "framer-motion";
-import SectionHeading from "../components/SectionHeading.jsx";
-import { Sparkles, Zap, Target, Users } from "lucide-react";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 
-const stats = [
-  { icon: Sparkles, label: "Projects Built", value: "05+" },
-  { icon: Zap, label: "Learning Experience", value: "1+ Year" },
-  { icon: Target, label: "Focused Stack", value: "MERN" },
-  { icon: Users, label: "Goal", value: "Full Stack Dev" },
+const TEXT =
+  "I am a full-stack engineer who designs, builds and ships web applications from end to end. I work across the interface, the API and the database, and I care about clean code, performance and products that people enjoy using.";
+
+const facts = [
+  ["Frontend", "React, Next.js, Tailwind CSS"],
+  ["Backend", "Node.js, Express, NestJS, REST APIs"],
+  ["Data", "MongoDB, PostgreSQL, MySQL"],
 ];
 
-export default function About() {
+function Word({ children, progress, range }) {
+  const opacity = useTransform(progress, range, [0.15, 1]);
   return (
-    <motion.section
-      id="about"
-      className="py-24 px-6 md:px-9"
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.25 }}
-      transition={{ duration: 0.85, ease: "easeOut" }}
-    >
-      <div className="max-w-screen mx-auto grid lg:grid-cols-2 gap-16 items-center">
+    <motion.span style={{ opacity }} className="mr-[0.25em] inline-block">
+      {children}
+    </motion.span>
+  );
+}
 
-        {/* Left Content */}
-        <motion.div
-          initial={{ opacity: 0, x: -30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-        >
-          <SectionHeading
-            eyebrow="About Me"
-            title="MERN Stack Developer"
-          />
+export default function About() {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.8", "end 0.55"] });
+  const words = TEXT.split(" ");
 
-          <p className="mt-6 text-muted leading-relaxed">
-            I'm <span className="text-white font-medium">Shoaib Akhter</span>, a passionate
-            <span className="text-primary font-medium"> MERN Stack Developer</span> focused on building
-            modern, responsive and scalable web applications using MongoDB, Express.js, React and Node.js.
-          </p>
-
-          <p className="mt-4 text-muted leading-relaxed">
-            I enjoy creating clean UI, powerful backend systems and full-stack projects that solve real-world problems.
-            My focus is always on performance, user experience and writing maintainable code.
-          </p>
-
-          <p className="mt-4 text-muted leading-relaxed">
-            Currently, I am improving my full-stack skills by building real-world projects and continuously learning
-            modern web development practices.
-          </p>
-        </motion.div>
-
-        {/* Right Stats */}
-        <div className="grid grid-cols-2 gap-5">
-
-          {stats.map((s, i) => (
-            <motion.div
-              key={s.label}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="glass p-8 hover:border-primary/40 hover:-translate-y-1 transition"
-            >
-              <s.icon className="h-7 w-7 text-primary mb-3" />
-              <div className="font-display text-3xl gradient-text">
-                {s.value}
-              </div>
-              <div className="text-sm text-muted">{s.label}</div>
-            </motion.div>
+  return (
+    <section id="about" ref={ref} className="px-6 py-32 md:px-9">
+      <div className="mx-auto max-w-screen">
+        <p className="eyebrow mb-6">About me</p>
+        <p className="font-display text-2xl font-bold leading-[1.25] tracking-tight md:text-3xl lg:text-4xl">
+          {words.map((w, i) => (
+            <Word key={i} progress={scrollYProgress} range={[i / words.length, (i + 1) / words.length]}>
+              {w}
+            </Word>
           ))}
+        </p>
 
-        </div>
-
+        <dl className="mt-20 grid gap-10 border-t border-fg/15 pt-10 sm:grid-cols-3">
+          {facts.map(([title, stack]) => (
+            <div key={title}>
+              <dt className="font-display text-2xl font-extrabold text-primary md:text-3xl">{title}</dt>
+              <dd className="mt-2 text-muted">{stack}</dd>
+            </div>
+          ))}
+        </dl>
       </div>
-    </motion.section>
+    </section>
   );
 }
